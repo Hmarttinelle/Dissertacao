@@ -1,0 +1,116 @@
+\documentclass[10pt]{article}
+
+% Carrega as configurações (margens, pacotes, bibliografia)
+\input{packageConfig} 
+
+% Dados da Capa Provisória (O template diz para substituir pelo PDF oficial depois)
+%\title{\textcolor{blue}{A capa e a contracapa (modelo em pdf) devem ser inseridos antes da primeira página do trabalho}}
+%\author{\textcolor{blue}{retirar esta página depois}}
+%\date{ }
+
+\begin{document}
+
+% --- CAPA PROVISÓRIA ---
+
+% --- PRÉ-TEXTUAIS ---
+
+\newpage
+\phantomsection
+\section*{DEDICATÓRIA}
+\addcontentsline{toc}{section}{DEDICATÓRIA}
+\input{A_Dedicatoria}
+
+\newpage
+\phantomsection
+\section*{AGRADECIMENTOS}
+\addcontentsline{toc}{section}{AGRADECIMENTOS}
+\input{B_Agradecimentos}
+
+\newpage
+\phantomsection
+\section*{RESUMO}
+\addcontentsline{toc}{section}{RESUMO}
+\input{C_Resumo}
+
+\newpage
+\phantomsection
+\section*{ABSTRACT}
+\addcontentsline{toc}{section}{ABSTRACT}
+\input{D_Abstract}
+
+% --- ÍNDICES ---
+\hypersetup{linkcolor=black} % <-- Muda a cor para preto 
+\newpage
+\tableofcontents
+
+\newpage
+\listoftables
+
+\newpage
+\listoffigures
+
+\newpage
+\lstlistoflistings
+
+\hypersetup{linkcolor=blue} % <-- Volta a colocar os restantes links a azul para o resto do texto
+
+\newpage
+\phantomsection
+\section*{LISTA DE SIGLAS/ABREVIATURAS}
+\addcontentsline{toc}{section}{LISTA DE SIGLAS/ABREVIATURAS}
+\input{E_SiglasAbrevia}
+
+\newpage
+\phantomsection
+\section*{LISTA DE SÍMBOLOS}
+\addcontentsline{toc}{section}{LISTA DE SÍMBOLOS}
+\input{E_Simbolos}
+
+% --- CAPÍTULOS (Numeração Arábica) ---
+\newpage
+\pagenumbering{arabic}
+
+% Capítulo 1
+\section{INTRODUÇÃO}
+\input{F_Capitulo_1}
+
+% Capítulo 2
+\newpage
+\section{ESTADO DA ARTE}
+\input{F_Capitulo_2}
+
+% Capítulo 3
+\newpage
+\section{MODELOS DE CÁLCULO PARA ELEMENTOS EM BETÃO ARMADO}
+\input{F_Capitulo_3}
+
+% Capítulo 4
+\newpage
+\section{ALGORITMOS DE DIMENSIONAMENTO IMPLEMENTADOS}
+\input{F_Capitulo_4}
+
+% Capítulo 5
+\newpage
+\section{DESCRIÇÃO DA IMPLEMENTAÇÃO DOS ALGORITMOS EM PYTHON}
+\input{F_Capitulo_5}
+
+% Capítulo 6
+\newpage
+\section{TESTES E VALIDAÇÕES DA APLICAÇÃO}
+\input{F_Capitulo_6}
+
+% Capítulo 7
+\newpage
+\section{CONCLUSÃO}
+\input{F_Capitulo_7}
+
+% --- PÓS-TEXTUAIS ---
+
+\newpage
+% Imprime a Bibliografia
+\printbibliography[heading=bibintoc,title={REFERÊNCIAS BIBLIOGRÁFICAS}]
+
+\newpage
+\input{H_Apendices}
+
+\end{document}

@@ -1,0 +1,238 @@
+%Nas secções seguintes apresentam-se os algoritmos que implementam os modelos teóricos enunciados no capítulo anterior \cite{EN1992,CachimPreEforco}. Os algoritmos escritos em pseudocódigo pretendem representar uma maneira simples de como fazer a implementação dos modelos teóricos para uma linguagem de programação qualquer. Porém, no trabalho desenvolvido estes são escritos em  Python, integrados na framework web Django, para possibilitar o alojamento da aplicação num servidor e tornando-a, assim, acessível a toda a comunidade científica e académica.
+
+Este capítulo apresenta os algoritmos computacionais derivados dos modelos teóricos do Capítulo 3. 
+Cada algoritmo é expresso em pseudocódigo, destacando as iterações de refinamento, verificações normativas e otimização construtiva \cite{EN1992,CachimPreEforco}.
+
+\subsection{Algoritmo para o dimensionamento de vigas em flexão simples}
+%O algoritmo listado em Listing \ref{alg:viga}, descreve o procedimento implementado num módulo Django de nome \texttt{viga\_service.py}. Diferente de um cálculo manual simplificado, o programa executa uma iteração de refinamento. Inicialmente, iteração 1, assume-se um diâmetro para uma armadura para estimar a altura útil $d_1$. Após calcular a armadura necessária, o sistema verifica qual o diâmetro comercial ótimo para essa área. Se este diâmetro real diferir do assumido, o sistema recalcula tudo, iteração 2, com a altura útil corrigida $d_2$, eliminando erros de estimativa.
+O algoritmo \texttt{viga\_service.py} implementa a iteração de refinamento da altura útil $d$, eliminando erros de estimativa.
+
+\begin{lstlisting}[style=PseudoStyle, basicstyle=\ttfamily\normalsize, caption={Dimensionamento de uma viga à flexão simples (viga\_service.py)}, label={alg:viga}]
+ALGORITMO Dimensionar_Viga
+ENTRADAS: b, h, f_ck, f_yk, M_Ed, c_nom
+CONSTANTES: gamma_c=1.5, gamma_s=1.15, alpha_cc=1.0, lambda=0.8
+
+// 1. Parametros de Calculo
+f_cd <- alpha_cc * f_ck / gamma_c
+f_yd <- f_yk / gamma_s
+phi_estribo <- 8.0
+phi_long_assumido <- 16.0 // Estimativa inicial
+
+// --- ITERACAO 1 (Estimativa) ---
+// 3. Altura util estimada
+d1 <- h - c_nom - phi_estribo - (phi_long_assumido / 2)
+
+// 4. Momento reduzido e Verificacao de Ductilidade
+mu <- M_Ed / (b * d1^2 * f_cd)
+mu_lim <- 0.8 * 0.45 * (1 - 0.5 * 0.8 * 0.45)
+SE mu > mu_lim ENTAO
+    ERRO "Seccao necessita de armadura de compressao"
+FIM SE
+
+// 7. Area de Aco Temporaria
+xi <- (1 - SQRT(1 - 2 * mu)) / 0.8
+z <- d1 * (1 - 0.5 * 0.8 * xi)
+As_req_temp <- M_Ed / (z * f_yd)
+
+// Determinar diametro real da solucao otima temporaria
+solucao_temp <- Otimizar_Armadura(As_req_temp, largura_disp)
+phi_long_final <- Obter_Diametro(solucao_temp)
+
+// --- ITERACAO 2 (Recalculo de Precisao) ---
+SE phi_long_final != phi_long_assumido ENTAO
+    // 6.1 Nova Altura util (Refinada)
+    d2 <- h - c_nom - phi_estribo - (phi_long_final / 2)
+    
+    // 6.2 Recalculo de Esforcos
+    mu <- M_Ed / (b * d2^2 * f_cd)
+    SE mu > mu_lim ENTAO ERRO "Excede mu_lim no recalculo"
+    
+    xi <- (1 - SQRT(1 - 2 * mu)) / 0.8
+    z <- d2 * (1 - 0.5 * 0.8 * xi)
+    As_req <- M_Ed / (z * f_yd)
+SENAO
+    As_req <- As_req_temp
+FIM SE
+
+// 8. Verificacao de Armadura Minima
+f_ctm ← 0.30 * f_ck^(2/3)
+A_s,min ← max(0.26 * (f_ctm/f_yk) * b * d₂, 0.0013 * b * d₂)
+A_s,final ← max(A_s,req, A_s,min)
+
+// 9. Proposta Final (Servico de Armadura)
+combinações ← Otimizar_Armadura(A_s,final, largura_disp)
+RETORNAR combinações (única e mista)
+\end{lstlisting}
+
+
+\subsection{Algoritmo para dimensionamento de pilares em flexão composta}
+%O algoritmo listado em Listing \ref{alg:pilar} descreve o procedimento implementado num módulo Django de nome \texttt{pilar\_service.py}. 
+%A maior dificuldade encontrada na sua implementação foi a verificação automática da instabilidade. O algoritmo calcula a esbelteza $\lambda$, e compara-a com o limite $\lambda_{lim}$. Se o pilar for esbelto, o algoritmo calcula a curvatura $1/r$, e o momento de segunda ordem $M_2$, antes de avançar para o cálculo da área da armadura.
+O algoritmo \texttt{pilar\_service.py} integra verificação de esbelteza e efeitos de 2ª ordem (método da curvatura nominal) ver listagem 2.
+
+\begin{lstlisting}[style=PseudoStyle, basicstyle=\ttfamily\normalsize, caption={Dimensionamento de pilares à flexão composta reta (pilar\_service.py)}, label={alg:pilar}]
+ALGORITMO Dimensionar_Pilar
+ENTRADAS: b, h, l₀, ligações, f_ck, f_yk, N_Ed, M₀_Ed, c_nom, φ_ef
+
+// 1. Comprimento de encurvatura
+β ← Determinar_Beta(lig_top, lig_base)  // 0.7, 0.85, 1.0
+l₀ ← β * l
+
+// 2. Esbelteza
+i ← h / √12
+λ ← l₀ / i
+n ← N_Ed / (b * h * f_cd)
+λ_lim ← 20 * A * B * C / √n
+
+// 3. Efeitos de 2ª ordem 
+M_Ed ← M₀_Ed
+SE λ > λ_lim ENTAO
+  1/r ← K_r * K_φ * (f_yd/E_s) / (0.45 * d_est)
+  e₂ ← (1/r) * l₀² / 10
+  M₂ ← N_Ed * e₂
+  M_Ed ← M₀_Ed + M₂
+FIM SE
+
+// 4. Dimensionamento iterativo
+A_s,req ← Dimensionar_Pilar_Rigoroso(N_Ed, M_Ed, ...)
+
+// 5. Mínimos e otimização
+A_s,min ← max(0.10 * N_Ed / f_yd, 0.002 * b * h)
+A_s,final ← max(A_s,req, A_s,min)
+combinações ← Otimizar_Armadura_Pilar(A_s,final)
+RETORNAR combinações simétricas
+\end{lstlisting}
+
+%A implementação em Python do dimensionamento de pilares segue diretamente o procedimento apresentado na Secção dos pilares em flexão composta. A função \texttt{dimensionar\_pilar(...)} começa por calcular os parâmetros de cálculo $f_{cd}$, $f_{yd}$, a área de betão $A_c = b \cdot h$ e os esforços de dimensionamento $N_{Ed}$ e $M_{0Ed}$. Em seguida avalia a esbelteza do elemento, através do comprimento de encurvadura $l_0 = \beta l$, do raio de giração $i = h / \sqrt{12}$, da esbelteza $\lambda = l_0 / i$ e do esforço axial reduzido $n = N_{Ed} / (A_c f_{cd})$, determinando também a esbelteza limite $\lambda_{lim}$ pela expressão simplificada adotada. A comparação entre $\lambda$ e $\lambda_{lim}$ permite classificar o pilar como não esbelto ou esbelto. No primeiro caso, o momento de cálculo mantém-se igual ao momento de primeira ordem ($M_{Ed} = M_{0Ed}$); no segundo, é ativado o método da curvatura nominal, sendo calculado um incremento de segunda ordem $M_2$ e definido o momento total $M_{Ed} = M_{0Ed} + M_2$. Este valor é então utilizado na função auxiliar \texttt{\_dimensionar\_pilar\_rigoroso(...)}, que implementa o modelo teórico: itera na profundidade da zona comprimida $x$ até satisfazer o equilíbrio axial $N_{Rd} = N_{Ed}$, calcula o momento resistente correspondente $M_{Rd}$ e ajusta a área total de armadura $A_s$ até garantir a condição $M_{Rd} \ge M_{Ed}$. Por fim, a área de armadura obtida é confrontada com os limites mínimos e máximos (entre $A_{s,min}$ e $A_{s,max} = 0.04 A_c$), sendo definido o valor final $A_{s,req}$, que é então passado ao módulo de otimização de armaduras para seleção da combinação de varões mais económica.
+
+\newpage
+\subsection{Algoritmo para dimensionamento de sapatas}
+
+%O algoritmo listado em Listing \ref{alg:sapata} descreve o procedimento implementado num módulo Django de nome \texttt{sapata\_service.py}. O módulo distingue-se pelo uso de dois ciclos iterativos:
+%\begin{enumerate}
+    %\item Ciclo geotécnico - SLS:\\
+    %Itera as dimensões em planta $a$ e $b$, até garantir que a tensão no solo $\sigma_{max}$, é inferior à admissível e que a sapata não levanta $\sigma_{min} \ge 0$.
+    %\item Ciclo Estrutural - ELU:\\
+    %Itera a altura útil $d$, incrementando-a passo a passo, de um em um cm, até verificar a segurança ao punçoamento sem armadura específica.
+%\end{enumerate}
+
+O algoritmo \texttt{sapata\_service.py} implementa \emph{dupla iteração}: geotécnica (ELS) para a determinação das dimensões em planta $A$ e $B$, seguida de estrutural (ELU) para a determinação da altura $H$ via punçoamento ver listagem 3. 
+
+\begin{lstlisting}[style=PseudoStyle, basicstyle=\ttfamily\normalsize, caption={Dimensionamento de sapatas (sapata\_service.py)}, label={alg:sapata}]
+ALGORITMO Dimensionar_Sapata
+ENTRADAS: sigma_adm, f_ck, f_yk, N_Ed, M_Ed, dimensoes_pilar
+
+// --- FASE 1: DIMENSIONAMENTO GEOTECNICO (ELS) ---
+N_k <- N_Ed / 1.4
+M_k <- M_Ed / 1.4
+Area_req <- N_k / sigma_adm
+// Estimativa inicial de A e B baseada na area e proporcao do pilar
+A, B <- Estimar_Geometria(Area_req, proporcao_pilar)
+PARA i DE 1 ATE 50 FAZER:
+    H_est <- MAX(A, B) / 8
+    Peso_Proprio <- A * B * H_est * 25
+    N_total <- N_k + Peso_Proprio
+    e_y <- M_k / N_total
+    
+    sigma_max <- (N_total / A*B) * (1 + 6*e_y/B)
+    sigma_min <- (N_total / A*B) * (1 - 6*e_y/B)
+    
+    // Criterios de paragem: Tensao OK e sem levantamento excessivo
+    SE (sigma_max <= sigma_adm) E (sigma_min >= 0) E (e_y <= B/6) ENTAO
+        SAIR DO CICLO
+    SENAO
+        Incrementar B em 0.05m
+        Ajustar A proporcionalmente
+    FIM SE
+FIM PARA
+
+// --- FASE 2: DIMENSIONAMENTO ESTRUTURAL (ELU) ---
+// Tensao de calculo no solo (desprezando peso proprio a favor da seguranca)
+sigma_Ed <- N_Ed / (A * B)
+// Iteracao para Altura Util (Puncoamento)
+d <- 0.15 // Inicio com 15cm
+PARA i DE 1 ATE 50 FAZER:
+    // Perimetro critico u1 e Area critica
+    u1 <- 2*(c1+c2) + 2*PI*d
+    Acrit <- ... // Area dentro do perimetro de controlo
+    V_Ed_pun <- N_Ed - sigma_Ed * Acrit
+    
+    // Resistencia ao corte (sem armadura)
+    k <- MIN(1 + SQRT(200/d), 2.0)
+    V_Rd_c <- (0.18/gamma_c) * k * (100 * 0.005 * f_ck)^(1/3) * u1 * d
+    
+    SE V_Rd_c >= V_Ed_pun ENTAO
+        SAIR DO CICLO
+    SENAO
+        d <- d + 0.01 // Incrementa 1cm
+    FIM SE
+FIM PARA
+H_final <- Arredondar_Superior(d + c_nom + phi/2)
+
+// --- FASE 3: FLEXAO (Modelo de Consolas) ---
+lx <- (A - bp) / 2
+M_Ed_flex <- (sigma_Ed * lx^2) / 2
+As_req <- Dimensionar_Flexao(M_Ed_flex, d)
+
+RETORNAR Geometria(A, B, H) e Armaduras(Ax, Ay)
+\end{lstlisting}
+
+\subsection{Algoritmo para a otimização de armadura}
+O algoritmo listado em Listagem \ref{alg:otimizacao} descreve a metodologia de decisão utilizada para converter uma área de aço para betão teórica $A_{s,req}$, numa solução construtiva prática. Este algoritmo varia consoante o elemento:
+\begin{enumerate}
+    \item Vigas e pilares\\
+    Gera combinações de varões, verifica se cabem na largura disponível e escolhe a que tem menor área total. Para pilares, impõe ainda simetria e número par de varões.
+    \item Sapatas\\
+    Itera sobre os diâmetros para encontrar o espaçamento necessário e escolhe a solução com menor consumo de aço por metro linear.
+\end{enumerate}
+
+\begin{lstlisting}[style=PseudoStyle, basicstyle=\ttfamily\normalsize, caption={Otimização de Armadura (armadura\_service.py)}, label={alg:otimizacao}]
+ALGORITMO Otimizar_Armadura
+ENTRADAS: As_req, largura_disponivel, tipo_elemento
+
+// --- CASO 1: VIGAS E PILARES (Combinacoes de Varoes) ---
+SE tipo_elemento == "Viga" OU "Pilar" ENTAO
+    solucoes_validas <- []
+    diametros <- [10, 12, 16, 20, 25]
+    
+    // Gerar combinacoes de 2 a 8 varoes
+    // (Para Pilares: apenas numeros pares 4, 6, 8)
+    PARA num_barras DE min_barras ATE 8 FAZER:
+        
+        // Testar combinacoes de diametro Unico e Misto
+        combinacoes <- Gerar_Combinacoes(diametros, num_barras)
+        
+        PARA comb EM combinacoes FAZER:
+            As_total <- Soma_Areas(comb)
+            
+            // Verifica se cumpre a area necessaria
+            SE As_total >= As_req ENTAO
+                // Verifica se cumpre espacamentos minimos
+                espaco_nec <- Calcular_Largura_Nec(comb)
+                SE espaco_nec <= largura_disponivel ENTAO
+                    Adicionar comb a solucoes_validas
+                FIM SE
+            FIM SE
+        FIM PARA
+    FIM PARA
+    // Criterio de decisao: Menor Area Total (Economia)
+    RETORNAR Menor_Area(solucoes_validas)
+
+// --- CASO 2: SAPATAS (Barras por Metro) ---
+SENAO SE tipo_elemento == "Sapata" ENTAO
+    solucoes_validas <- []
+    PARA diam EM [10, 12, 16, 20, 25] FAZER:
+        area_unitaria <- Area(diam)
+        // Calcular numero de barras por metro
+        n_barras <- CEIL(As_req / area_unitaria)
+        As_prov <- n_barras * area_unitaria
+        
+        // Verificar espacamento resultante
+        espacamento <- 1000 / n_barras
+        SE espacamento >= esp_minIMO ENTAO
+            Adicionar (diam, As_prov) a solucoes_validas
+        FIM SE
+    FIM PARA
+    RETORNAR Menor_Area(solucoes_validas)
+FIM SE
+\end{lstlisting}

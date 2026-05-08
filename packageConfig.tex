@@ -1,0 +1,169 @@
+%Polytechnic Institute of Viseu
+%School of Technology and Management of Viseu
+%File Template Dissertation Created by Gilberto Rouxinol on 2023
+%https://www.overleaf.com/
+%Copyright © https://ctan.org
+%Copyright © MIT License 2023 Gilberto Rouxinol
+
+% --- ESTE FICHEIRO É CHAMADO PELO main.tex ---
+% --- NÃO PODE CONTER \documentclass ---
+
+%Texto
+\usepackage[utf8]{inputenc}
+\usepackage[portuguese]{babel}
+
+%Texto cor
+\usepackage{xcolor}
+
+%Bibliografia
+\usepackage[backend=biber, style=numeric, sorting=ynt]{biblatex}
+\addbibresource{G_RefBiblio.bib}
+\usepackage{csquotes}
+
+%Configuração da página
+\usepackage[a4paper,left=3.0cm,right=3.0cm,top=2.5cm,bottom=2.5cm]{geometry}
+
+%Alinhar equações
+\usepackage{amsmath}
+
+%Fontes ou símbolos matemáticos
+\usepackage{amssymb}
+
+%Referências de figuras
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+
+%Colocar subfiguras
+\usepackage{caption}
+\usepackage{subcaption}
+
+%Escrever unidades do SI
+\usepackage{siunitx}
+
+%Acrescentar pdfs
+\usepackage{pdfpages}
+
+%Fixar figuras
+\usepackage{float}
+
+% --- PACOTE TIKZ PARA DESENHOS VETORIAIS ---
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, calc, patterns}
+
+% --- INÍCIO: PACOTE E ESTILOS DE CÓDIGO (Listings) ---
+\usepackage{listings} % Pacote principal para o código
+
+% --- Definir as cores ---
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+% --- Configuração global do listings (IMPORTANTE para acentos e underscores) ---
+\lstset{
+    literate={á}{{\'a}}1 {ã}{{\~a}}1 {ç}{{\c{c}}}1 {é}{{\'e}}1 {ê}{{\^e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {õ}{{\~o}}1 {ú}{{\'u}}1 {Á}{{\'A}}1 {Ã}{{\~A}}1 {Ç}{{\c{C}}}1 {É}{{\'E}}1 {Ê}{{\^E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Õ}{{\~O}}1 {Ú}{{\'U}}1
+    {Ø}{{\O}}1 {²}{{$^2$}}1 {←}{{$\leftarrow$}}1 {λ}{{$\lambda$}}1 {√}{{$\sqrt{}$}}2 {β}{{$\beta$}}1 {φ}{{$\phi$}}1 {π}{{$\pi$}}1 {μ}{{$\mu$}}1
+    {₀}{{$_0$}}1 {₁}{{$_1$}}1 {₂}{{$_2$}}1
+    {ª}{{$^a$}}1 {º}{{$^o$}}1
+    {_}{\textunderscore}1 % Trata o underscore como texto normal
+}
+
+% --- Estilo para Código Python ---
+\lstdefinestyle{PythonStyle}{
+    language=Python,
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2,
+    morekeywords={self, Falso, Verdadeiro, None} % Keywords extra
+}
+
+% --- Estilo para Pseudocódigo ---
+\lstdefinestyle{PseudoStyle}{
+    language=Bash, % Um truque para highlighting básico (trata # como comentário)
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{blue}, % Keywords em azul
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=true,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=none, % Sem números de linha para pseudocódigo
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2,
+    % Lista de keywords para o seu pseudocódigo
+    morekeywords={ALGORITMO, DADOS, ENTRADA, PARAMETROS, SE, ENTÃO, SENÃO, FIM, PARA, ATÉ, SAIR, DO, CICLO, FUNCAO, RETORNAR, VERIFICAR_DUCTILIDADE, MAX, Otimizar_Armadura_Viga, Dimensionar_Viga_com_Recalculo, Calcular_Resistencias, Calcular_Momento_Reduzido, Calcular_Area_Aco, Extrair_Diametro, Calcular_Armadura_Minima, Dimensionar_Pilar_com_Esbelteza, Obter_Coeficiente_Beta, Calcular_Esbelteza, Calcular_Esbelteza_Limite, Calcular_Momento_Segunda_Ordem, Dimensionar_Secção_Rigoroso, Calcular_Armadura_Minima_Pilar, Otimizar_Armadura_Pilar, Dimensionar_Sapata_com_Dupla_Iteracao, Converter_Esforcos_Servico, Estimar_Dimensoes_Iniciais, Estimar_Peso_Proprio, Calcular_Tensoes_Solo, Arredondar_Superior, Calcular_Esforco_Puncoamento, Calcular_Resistencia_Puncoamento, Calcular_Armaduras_Flexao, Otimizar_Armadura_Sapata, Otimização, Armadura, Construtiva, Barras, Discretas, Metro, Obter_Area, ARREDONDAR_CIMA, Verificar_Espacamento, Encontrar_Menor_Area}
+}
+% --- FIM DOS ESTILOS DE CÓDIGO ---
+
+% --- PACOTE PARA TABELAS ---
+\usepackage{booktabs}
+
+%Paginação
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\fancyfoot[R]{\thepage}
+
+%Criar os níveis de profundidade de subsubsubsection e de subsubsubsubsection
+\setcounter{secnumdepth}{5}
+\makeatletter
+\newcommand\subsubsubsection{\@startsection{paragraph}{4}{\z@}{-2.5ex\@plus -1ex \@minus -.25ex}{1.25ex \@plus .25ex}{\normalfont\normalsize\bfseries}}
+\newcommand\subsubsubsubsection{\@startsection{subparagraph}{5}{\z@}{-2.5ex\@plus -1ex \@minus -.25ex}{1.25ex \@plus .25ex}{\normalfont\normalsize\bfseries}}
+\renewcommand\paragraph{\@startsection{paragraph}{4}{\z@}{-3.25ex\@plus -1ex \@minus -.2ex}{1.5ex \@plus .2ex}{\normalfont\normalsize\bfseries}}
+
+\makeatother
+
+%Indicar o nível de profundidade do índice geral
+\setcounter{tocdepth}{5}
+
+%Renomear o nome por defeito de secções padrão
+\addto\captionsportuguese{\renewcommand{\contentsname}{ÍNDICE GERAL}}
+\addto\captionsportuguese{\renewcommand{\listfigurename}{ÍNDICE DE FIGURAS}}
+\addto\captionsportuguese{\renewcommand{\listtablename}{ÍNDICE DE TABELAS}}
+\renewcommand{\lstlistingname}{Listagem}
+\renewcommand{\lstlistlistingname}{ÍNDICE DE LISTAGENS}
+
+%\addto\captionsportuguese{\renewcommand{\lstlistingname}{Listagem}} 
+
+
+% As linhas seguintes foram movidas para o main.tex para os links funcionarem
+% \addcontentsline{toc}{section}{ÍNDICE DE TABELAS}
+% \addcontentsline{toc}{section}{ÍNDICE DE FIGURAS}
+% \addcontentsline{toc}{section}{LISTA DE SIGLAS/ABREVIATURAS}
+% \addcontentsline{toc}{section}{LISTA DE SÍMBOLOS}
+
+% --- INÍCIO: PACOTE DE HYPERLINKS (DEVE SER DOS ÚLTIMOS A CARREGAR) ---
+\usepackage[
+    colorlinks=true,    % Usa cores em vez de caixas
+    linkcolor=blue,     % Cor para links internos (Índice, figuras)
+    citecolor=blue,     % Cor para links de bibliografia
+    urlcolor=blue,      % Cor para URLs
+    bookmarks=true,       % Cria marcadores no PDF
+    bookmarksopen=true,   % Abre os marcadores por defeito
+    pdfpagemode=UseOutlines % Mostra os marcadores em vez de miniaturas
+]{hyperref}
+% --- FIM DO PACOTE DE HYPERLINKS ---
+
+%Colocar a numeração da secção à esquerda da numeração das equações, tabelas e figuras
+\numberwithin{equation}{section}
+\numberwithin{table}{section}
+\numberwithin{figure}{section}
+

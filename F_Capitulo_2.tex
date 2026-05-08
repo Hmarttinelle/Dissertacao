@@ -1,0 +1,112 @@
+Pretende-se com este capítulo revisitar a fundamentação teórica para a análise e o dimensionamento de estruturas constituídas por elementos em betão armado. 
+Assim, inicialmente é apresentada uma breve revisão sobre a principal norma aplicada a estruturas de betão armado, i.e., a Norma NP EN1992 de 2010, daqui em diante designada de Eurocódigo EC2. 
+Tratando-se de um trabalho realizado apenas na esfera do dimensionamento de edifícios em betão armado, i.e., não trata a verificação da resistência ao fogo, é utilizada apenas a Parte 1-1 do EC2 \cite{EN1992}, 
+daqui para a frente designada de, a Parte EC2-1-1 ou simplesmente, a EC2-1-1.
+
+Como nota adicional, de referir que a EC2-1-1 de 2010, sofreu algumas correções e alterações cujos conteúdos são apresentados na EC2-1-1/AC de 2012 e na EC2-1-1/A1 de 2019, respetivamente. Para tal, são abordados os seus princípios, assim como, as propriedades dos materiais e a metodologia de verificação da segurança de estruturas de betão armado. Pensa-se, assim, que com esta breve apresentação sejam consolidados os conhecimentos adquiridos anteriormente, i.e., em contexto de aula, para tornar possível o desenvolvimento de um modelo de cálculo posteriormente implementado num programa computacional.
+
+Propositadamente, não são apresentadas as inequações, expressões, gráficos, figuras e quadros da EC2-1-1, evitando-se assim eventuais, erros, ou omissões, ou falta de legibilidade, indicando-se apenas a respetiva referência da mesma. Igual metodologia é utilizada para os restantes eurocódigos que venham a ser mencionados.
+
+Nas secções seguintes são apresentadas as regras a satisfazer no projeto de estruturas de betão armado destinadas a edifícios, nomeadamente: os princípios e os requisitos de segurança das estruturas; 
+os requisitos de utilização das estruturas; os requisitos de durabilidade das estruturas; as propriedades dos materiais; a análise estrutural e os estados limites, últimos (ELU) e de utilização (SLS - Serviceability Limit State); 
+os modelos de cálculo teóricos; a análise do programa de cálculo structrun \cite{Structrun}; e o posicionamento face a ferramentas comerciais.
+
+\subsection{Princípios e requisitos fundamentais da EC2-1-1}
+A EC2-1-1 estabelece as regras de dimensionamento baseando-se em princípios que garantem a segurança, funcionalidade e durabilidade das estruturas de betão armado.
+ Os requisitos fundamentais para o dimensionamento são enumerados seguidamente:
+ 
+\begin{enumerate}
+        \item Vida útil do projeto:
+A Norma NP EN1990 de 2009 \cite{EN1990}, daqui em diante designada de EC0, serve de base a todos os outros eurocódigos no projeto estrutural de edifícios, nomeadamente, do EC1 ao EC9, introduzindo o conceito da vida útil de projeto. Trata-se do período durante o qual se assume que a estrutura será utilizada para o fim a que se destina, cumprindo-se a manutenção prevista, sem que sejam necessárias grandes reparações. Para edifícios correntes a vida útil é tipicamente de 50 anos. Este requisito influencia as escolhas relacionadas com a durabilidade.
+
+        \item Durabilidade:
+Uma estrutura é considerada duradoura quando satisfaz os requisitos de utilização, resistência e estabilidade ao longo da sua vida útil. A proteção das armaduras contra a corrosão é um fator central para assegurar a sua durabilidade, nomeadamente, através de um significativo recobrimento em betão e através do controlo da fendilhação. As condições ambientais às quais a estrutura está exposta, indicadas no quadro 4.1 da EC2-1-1, são fundamentais para satisfazer esta exigência.
+
+        \item  Resistência:
+A EC2-1-1 considera este requisito através de disposições construtivas, para o detalhamento da armadura, definidas nas secções 8 e 9.
+    
+        \item  Verificação por estado limite:
+O dimensionamento é realizado pelo método dos coeficientes parciais. Este método verifica dois estados limites:
+        \begin{enumerate}
+            \item ELU: associado à segurança e ao colapso da estrutura (secção 6 da EC2-1-1);
+            \item SLS: associada à funcionalidade e ao conforto das pessoas (secção 7 da EC2-1-1).
+\end{enumerate}
+\end{enumerate}
+
+Mais adiante, nas secções 2.4, uma apresentação mais detalhada é feita.
+
+\subsection{Propriedades dos materiais}
+O dimensionamento de elementos em betão armado é um exercício de otimização entre dois materiais de comportamento completamente distinto: o betão e o aço para betão armado. Para o betão, a EC2-1-1, indica os princípios e as regras a respeito: da resistência; da deformação elástica; da fluência e da retração; da relação tensões-extensões para a análise estrutural não linear; dos valores de cálculo das tensões de rotura à compressão e à tração; das relações tensões-extensões para o cálculo de secções transversais; da tensão de rotura à tração por flexão, e indica também a relação tensões-extensões para betão cintado. Para o aço para betão armado, a EC2-1-1, indica os princípios e as regras a respeito: das propriedades; da resistência; das características de ductilidade; da soldadura; da fadiga; e das hipóteses de cálculo. Nas subsecções seguintes são apresentadas algumas considerações a respeito de cada um destes dois materiais.
+
+\subsubsection{Betão}
+A EC2-1-1 preconiza para a resistência do betão a definição de uma resistência característica à compressão $f_{ck}$, obtida em ensaios com provetes cilíndricos, aos 28 dias. Em ensaios com provetes cúbicos a resistência característica segue a notação $f_{ck,cube}$. O quadro 3.1 da EC2-1-1, apresenta as características mecânicas associadas a cada classe de resistência do betão, e.g., C25/30, C30/37, etc., onde o primeiro valor que precede a barra oblíqua e o segundo valor que sucede a barra, indicam $f_{ck}$ e $f_{ck,cube}$, respetivamente. A resistência média à compressão $f_{cm}$, e a resistência média à tração $f_{ctm}$, entre outros, também são listados nesse quadro.
+A resistência de tração do betão é significativamente inferior à resistência de compressão. Ao nível dos estados limites últimos, para o cálculo da resistência à flexão de um elemento em betão armado, normalmente, a resistência de tração é ignorada. No entanto, ao nível dos estados limites de serviço, a resistência de tração representa um parâmetro essencial para o controlo da fendilhação do elemento. Voltando ao nível dos estados limites últimos, a EC2-1-1, propõe diagramas tensões-extensões idealizados para o betão comprimido. Os mais comuns são o diagrama parábola-retângulo, figura 3.3 da EC2-1-1, e o diagrama bilinear, figura 3.4 da EC2-1-1. Uma distribuição retangular de tensões na zona da secção comprimida do elemento em betão armado é aceitável, figura 3.5 da EC2-1-1. O valor de cálculo da resistência à compressão é obtido multiplicando o valor da resistência característica à compressão por um coeficiente que tem em conta os efeitos de longo prazo na resistência à compressão e os efeitos desfavoráveis resultantes do modo como a carga é aplicada dividido por um coeficiente parcial de segurança relativo ao Betão.
+
+\subsubsection{Aço para betão armado}
+A EC2-1-1, define os princípios e as regras a aplicar no dimensionamento da armadura para o betão armado. A resistência do aço é definida através da tensão de cedência $f_{yk}$ (valor característico da força de cedência dividido pelo valor da área nominal da secção transversal), e da resistência à tração $f_{tk}$ (valor característico da força máxima em tração simples dividido pelo valor da área nominal da secção transversal). Tal como para o betão, a EC2-1-1 apresenta também um quadro com os valores das propriedades para o aço para betão armado, designadamente, o quadro C.1 complementado pelo quadro NA.I. Para o dimensionamento das secções transversais dos elementos em betão armado, utiliza-se o diagrama tensões-extensões, idealizado e de cálculo, do aço das armaduras para betão armado (tracionado ou comprimido), figura 3.8 da EC2-1-1 ou figura \ref{fig:diagrama_aco}. Em relação ao diagrama de cálculo, este apresenta dois ramos superiores: um inclinado (com uma extensão limite); e um horizontal (sem necessidade de verificação do limite de extensão). O valor da tensão de cálculo é igual à razão entre o valor de cálculo da tensão de cedência à tracção do aço das armaduras para betão armado e o valor do coeficiente parcial relativo ao aço das armaduras para betão armado ou de pré-esforço. A secção 3.2.7, da EC2-1-1, apresenta também o valor médio da massa volúmica ($7850 \text{ kg/m}^3$) e o valor do módulo de elasticidade (200 GPa).
+
+\subsection{Durabilidade e recobrimento das armaduras}
+A secção 4 da EC2-1-1, apresenta os princípios e regras a aplicar no que diz respeito a requisitos de utilização, resistência e estabilidade, nomeadamente, durabilidade e recobrimento das armaduras. Na EC2-1-1, o quadro 4.1, apresenta as classes de exposição em função das condições ambientais, de acordo com a EN 206-1 e o quadro NA-4.3N a classificação estrutural recomendada. 
+
+\subsection{Análise estrutural}
+A secção 5, da EC2-1-1, apresenta o objetivo de uma análise estrutural: determinar em toda a estrutura, a distribuição: dos esforços; das tensões; das extensões; e dos deslocamentos. Os modelos de comportamento utilizados na análise podem ser do tipo: elástico linear (são admitidas como hipóteses: sessões não fendilhadas; relação tensão-extensão linear; e um valor médio para o módulo de elasticidade); elástico linear com redistribuição limitada de esforços (em vigas solicitadas predominantemente à flexão e em que a relação entre vãos adjacentes esteja entre 0,5 e 2. Obviamente, a redistribuição não deve ser efetuada nos casos em que a capacidade de rotação da secção transversal não possa ser definida com rigor); plástico e.g. os modelos de escordas e tirantes (a ductilidade da secções críticas deve ser suficiente para a formação do mecanismo considerado, para tal, um método simplificado utilizado para vigas continuas baseia-se precisamente na determinação da capacidade de rotação em vigas ao longo de um comprimento de aproximadamente 1,2 vezes a altura da secção); não lineares (as características dos materiais devem representar a rigidez de uma forma realista tendo em conta as incertezas da rotura e devem utilizar-se apenas os modelos de cálculo que sejam válidos nos domínios de aplicação considerados). De referir ainda que em todos os casos será necessário ter em conta os efeitos de segunda ordem e as imperfeições geométricas. Para a idealização da estrutura, a EC2-1-1 apresenta os modelos estruturais para a análise global, assim como, as grandezas geométricas.
+
+\subsubsection{Estados limites últimos}
+Em relação à verificação dos ELU, a secção 6 da EC2-1-1, apresenta as verificações à resistência dos elementos em betão armado para os diversos tipos de esforços e tipos de elementos (sem e com descontinuidades), nomeadamente, esforço de flexão simples e flexão composta, esforço transverso, esforço de torção, esforço de punçoamento, projeto com modelos de escoras e tirantes, ancoragens e sobreposições, áreas sujeitas a forças concentradas, e fadiga. 
+O trabalho aqui apresentado, como já referido anteriormente, concentra-se no estudo de elementos em betão armado sujeitos a esforço de flexão simples, flexão composta, e esforço transverso, pelo que apenas estes são aqui tratados. As combinações de ações são para situações persistentes ou transitórias, designadas simplesmente, de combinações fundamentais. Assim, em relação aos esforços de flexão e flexão composta, a EC2-1-1, enuncia algumas hipóteses para a verificação da sua resistência, nomeadamente, as secções mantêm-se planas após a deformação, a extensão nas armaduras aderentes em tração ou em compressão é a mesma da do betão que as envolve, a resistência do betão à atração é ignorada, as tensões no betão comprimido são obtidas do diagrama tensões-extensões de cálculo, as tensões nas armaduras para betão armado são obtidas dos diagramas de cálculo, referido anteriormente na secção 2.2.2, com os dois ramos. Para a verificação ao esforço transverso, a EC2-1-1, considera duas situações, i.e., elementos para os quais não é, e é, requerida armadura de esforço transverso. 
+
+\subsubsection{Estados limites de utilização}
+Para a verificação dos SLS e tendo presente as combinações quase-permanentes, a EC2-1-1 enumera três grandes categorias de verificações, designadamente: (1) a limitação das tensões; (2) o controlo da fendilhação, i.e., a limitação da abertura de fendas, através de armaduras mínimas e de regras de espaçamento; e (3) o controlo das deformações, i.e., a verificação de que as flechas não excedem os limites admissíveis, definidos no quadro 7.4N.
+
+
+\subsection{Modelos de cálculo teóricos}
+A EC2-1-1, como já referido anteriormente, fornece um conjunto de modelos teóricos simplificados que permitem analisar o comportamento do betão armado por ELU. Os modelos, são baseados nos princípios da mecânica e na verificação experimental, e representam as bases para o dimensionamento. As secções seguintes descrevem os modelos que foram adotados no desenvolvimento dos algoritmos desta dissertação.
+
+\subsubsection{Modelo de flexão simples - Diagrama retangular simplificado}
+Para o dimensionamento de secções retangulares sujeitas a flexão simples, o modelo mais utilizado na prática e em implementações computacionais é o diagrama retangular simplificado, apresentado na secção 3.1.7 da EC2-1-1. O modelo substitui a distribuição parabólica, mais real, das tensões no betão comprimido por uma distribuição de tensões retangular equivalente, figura 3.5 da EC2-1-1.
+Adotou-se este modelo em detrimento do diagrama parábola-retângulo (mais exato) pois, embora ligeiramente mais conservador, simplifica significativamente as equações de equilíbrio. Esta simplificação permite um desempenho computacional mais eficiente para os algoritmos de iteração e otimização, sem qualquer perda de segurança no dimensionamento final.
+
+\subsubsection{Modelo de esforço transverso - Analogia da treliça}
+Para o dimensionamento de secções retangulares sujeitas ao esforço transverso, a EC2-1-1 na secção 6.2, apresenta um modelo baseado na analogia da treliça. O modelo idealiza o comportamento de uma viga fendilhada como se tratasse de uma treliça, composta por cordas, diagonais e montantes. Consoante os elementos estejam à compressão ou à tração, é-lhes associado, uma escora em betão ou um tirante em aço para betão.
+
+\subsubsection{Modelo de flexão composta e efeitos de segunda ordem}
+O dimensionamento de pilares requer a verificação da interação entre o esforço axial ($N_{Ed}$) e o momento fletor ($M_{Ed}$). Adicionalmente, para elementos esbeltos, a secção 5.8 da EC2-1-1 impõe a consideração dos efeitos de segunda ordem (encurvadura). O modelo simplificado, adotado pela EC2-1-1, para a verificação baseia-se no método da curvatura nominal, secção 5.8.8.
+
+\subsubsection{Modelo de punçoamento em sapatas e lajes}
+O punçoamento é um ELU de rotura por esforço transverso que ocorre em lajes ou sapatas na vizinhança de pilares. O modelo de verificação, descrito na secção 6.4 da EC2-1-1, baseia-se na verificação da tensão de corte num perímetro de controlo crítico, $u_1$, que se situa a uma distância $2d$ das faces do pilar.
+
+%\subsection{Estudo do programa de cálculo - Struct Run}
+%O desenvolvimento do presente trabalho enquadra-se na expansão de uma ferramenta de cálculo existente, denominada Struct Run, desenvolvida em C++ pelo orientador desta dissertação. Uma análise prévia da sua arquitetura e 
+%funcionalidades é, por isso, essencial para contextualizar a integração dos novos módulos de dimensionamento.
+%O Struct Run é um programa concebido para a análise elástica linear de estruturas reticuladas planas, como vigas contínuas e pórticos. A sua estrutura, organizada de forma modular e orientada a objetos, reflete a metodologia 
+%clássica da análise matricial de estruturas (método da rigidez direta).
+
+\subsection{Análise do programa Struct Run}
+O Struct Run, desenvolvido em C++ pelo orientador desta dissertação, constitui uma ferramenta de análise elástica linear de estruturas reticuladas planas (vigas contínuas e pórticos), baseada no método da rigidez direta.
+O sistema desenvolvido neste trabalho posiciona-se como módulo complementar de \emph{pós-processamento e dimensionamento}, recebendo os esforços calculados pelo Struct Run e aplicando os procedimentos da EC2-1-1 para determinar as secções e armaduras necessárias.
+
+
+\subsubsection{Enquadramento do novo módulo computacional}
+O estudo ao Struct Run permite concluir que a sua funcionalidade se concentra na análise de esforços, ou seja, na determinação das solicitações ($N_{Ed}$, $M_{Ed}$, etc.) que atuam nos elementos estruturais.
+O trabalho desenvolvido nesta dissertação posiciona-se como um módulo de pós-processamento e dimensionamento. Ele recebe como *input* os esforços calculados no Struct Run e, com base nesses esforços, aplica os procedimentos da EC2-1-1 para realizar o dimensionamento das secções em betão armado, ou seja, a determinação das áreas de aço ($A_s$) e de betão que satisfaçam as verificações preconizadas na EC2-1-1 e por fim sua representação através de um desenho técnico.
+
+\subsection{Posicionamento face a ferramentas comerciais}
+%O desenvolvimento de uma nova ferramenta de cálculo insere-se num mercado onde já existem soluções comerciais robustas, como o Cypecad (CYPE Ingenieros) \cite{CYPECAD} ou o Robot Structural Analysis (Autodesk) \cite{RobotManual}, entre outras. 
+%Estas ferramentas são soluções integradas que cobrem todo o fluxo de trabalho: modelação 3D, análise de esforços (muitas vezes por elementos finitos) e dimensionamento de todos os elementos, incluindo lajes, escadas e ligações.
+
+%No entanto, estas soluções são frequentemente "caixas-pretas" \emph{caixas-pretas}, onde o processo de cálculo intermédio e as otimizações não são transparentes para o utilizador. 
+%A ferramenta desenvolvida na presente dissertação não pretende competir em amplitude de funcionalidades, mas sim em especificidade e transparência:
+
+Ferramentas comerciais como o CYPECAD \cite{CYPECAD} e o Autodesk Robot Structural Analysis Professional \cite{RobotManual} oferecem soluções integradas de modelação, análise e dimensionamento. 
+Contudo, estas funcionam frequentemente como \emph{caixas-pretas}, com processos intermédios pouco transparentes. 
+
+A aplicação desenvolvida distingue-se por:
+\begin{enumerate}
+    \item \textbf{Foco na otimização -} o algoritmo de otimização de armadura, secção 3.5 da EC2-1-1, é um diferencial, procurando a solução construtiva mais económica (menor área de aço) que cumpre os requisitos normativos e de espaçamento, algo que nem sempre é o foco principal das ferramentas comerciais.
+    \item \textbf{Geração de relatórios -} a aplicação gera uma memória de cálculo passo a passo e representação gráfica das soluções.
+    \item \textbf{Flexibilidade e integração -} sendo uma ferramenta modular, i.e., através de serviços Python, pode ser facilmente integrada com outros sistemas, como o Structrun, ou adaptada a requisitos específicos de projeto.
+    \item \textbf{Disponibilidade a toda a comunidade -} os algoritmos de dimensionamento de elementos em betão armado alojados em servidor permitem um acesso livre e gratuito aberto à discussão e adição de outros algoritmos.
+\end{enumerate}
+
+Portanto, o sistema posiciona-se não como um substituto, mas como uma ferramenta ágil e especializada, focada no dimensionamento otimizado e transparente de elementos em betão armado.
+Revista a fundamentação teórica, o capítulo seguinte detalha os modelos de cálculo adotados como base para os algoritmos, de dimensionamento de elementos em betão armado.

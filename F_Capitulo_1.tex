@@ -1,0 +1,39 @@
+A análise e o dimensionamento de estruturas de betão armado constituem uma matéria fundamental da Engenharia Civil. Com a publicação dos Eurocódigos, nomeadamente: a NP EN 1990 (Eurocódigo 0) \cite{EN1990}, a NP EN 1991 (Eurocódigo 1) \cite{EN1991} e a NP EN 1992 (Eurocódigo 2) \cite{EN1992}, a metodologia de cálculo tornou-se mais complexa e exigente, requerendo uma análise rigorosa de múltiplos estados limites e parâmetros.
+
+Apesar da complexidade dos regulamentos, o processo de dimensionamento de elementos comuns como vigas, pilares e sapatas segue uma lógica algorítmica bem definida. Esta natureza processual torna o dimensionamento particularmente adequado para a automatização computacional. Ferramentas que implementam estes algoritmos não só aumentam a produtividade do projetista, como também reduzem a probabilidade de erro humano e facilitam a exploração de múltiplas soluções de dimensionamento.
+
+O presente trabalho insere-se neste contexto, visando um aprofundamento dos métodos de análise e dimensionamento de elementos estruturais em betão armado. Deste modo, o trabalho articula a consolidação do conhecimento técnico com a aplicação prática de métodos de análise e dimensionamento estrutural.
+\subsection{Objetivos}
+A dissertação tem como objetivo principal o desenvolvimento de uma ferramenta computacional para a análise e o dimensionamento de elementos estruturais em betão armado, com base nos regulamentos europeus aplicáveis.
+
+Para atingir este objetivo principal, foram definidos os seguintes objetivos específicos:
+
+\begin{enumerate}
+    \item Realizar o estado da arte sobre os regulamentos europeus aplicáveis (NP EN 1990 \cite{EN1990}, NP EN 1991 \cite{EN1991} e NP EN 1992 \cite{EN1992}), focando os modelos de cálculo para situações de projeto persistentes.
+    \item Desenvolver modelos de cálculo teóricos para o dimensionamento de elementos  do tipo sapata, pilar (flexão composta) e viga (flexão simples).
+    \item Propor e estruturar algoritmos computacionais detalhados para cada um dos elementos tipo, que permitam a obtenção de soluções otimizadas.
+    \item Desenvolver uma aplicação computacional em Python\cite{PythonDocs}, recorrendo à framework Django \cite{DjangoDocs}, que implemente os algoritmos definidos e seja disponibilizada online.
+   % \item Integrar a ferramenta de dimensionamento com o programa de análise matricial Struct Run, criando uma cadeia de cálculo completa (análise de esforços e posterior dimensionamento).
+    \item Testar e validar a implementação computacional, comparando os resultados obtidos com cálculos manuais e outros softwares de referência.
+    \item Apresentar o trabalho desenvolvido, incluindo a geração de memórias de cálculo e a visualização gráfica dos elementos dimensionados.
+\end{enumerate}
+
+\subsection{Âmbito e Limitações}
+A proposta inicial deste trabalho previa a análise de sapatas, pilares, vigas e lajes. Dada a complexidade e o tempo de desenvolvimento, foi tomada a decisão de focar o âmbito nos elementos fundamentais de fundação e estrutura vertical (sapatas e pilares) e no dimensionamento à flexão de vigas.
+
+Adicionalmente, o dimensionamento de vigas foca-se na flexão simples (armadura longitudinal). Como tal, o dimensionamento de lajes, embora constitua uma parte integrante do Eurocódigo 2, é aqui omitido e constituem o principal tópico para trabalho futuro, conforme detalhado no capítulo da Conclusão.
+
+\subsection{Estrutura da Dissertação}
+Este documento para além deste capítulo introdutório está estruturado em mais seis capítulos principais:
+
+\begin{itemize}
+    \item \textbf{Capítulo 1:} Introdução.
+    \item \textbf{Capítulo 2:} Apresenta o Estado da Arte, detalhando a fundamentação teórica e regulamentar do Eurocódigo 2, os modelos de cálculo e a análise de ferramentas existentes.
+    \item \textbf{Capítulo 3:} Descreve os Modelos de Cálculo teóricos adotados para o dimensionamento de vigas, pilares e sapatas, e para a otimização de armaduras.
+    \item \textbf{Capítulo 4:} Formaliza os modelos teóricos em Algoritmos computacionais, apresentados em pseudocódigo, detalhando a lógica iterativa e de otimização.
+    \item \textbf{Capítulo 5:} Descreve a Implementação Computacional do sistema, detalhando a arquitetura (Python, Django, Camada de Serviços) e a tradução dos algoritmos em código.
+    \item \textbf{Capítulo 6:} Apresenta o processo de teste e validação do software desenvolvido, com recurso a casos de referência da literatura técnica e a testes automatizados.
+    \item \textbf{Capítulo 7:} Apresenta a Conclusão, resumindo os objetivos alcançados, as dificuldades enfrentadas e as propostas de trabalho futuro.
+\end{itemize}
+
+Definida a estrutura do documento, o capítulo seguinte inicia o trabalho com a apresentação do estado da arte.

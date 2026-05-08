@@ -16,7 +16,7 @@ A fiabilidade da aplicação foi avaliada através de testes unitários automati
 
 A aplicação web mencionada no resumo, desenvolvida em Python e Django para a realização dos cálculos estruturais e geração dos relatórios gráficos e analíticos, encontra-se armazenada num repositório independente.
 
-* **Código Fonte da Aplicação:** [https://github.com/Hmarttinelle/Tese_Final.git](https://github.com/Hmarttinelle/Tese_Final.git)
+* **Código Fonte da Aplicação:** [https://github.com/Hmarttinelle/M.J_Structural_Tools.git](https://github.com/Hmarttinelle/M.J_Structural_Tools.git)
 * **Aplicação Online (Live Demo):** [https://pv27108.pythonanywhere.com/](https://pv27108.pythonanywhere.com/)
 
 ### Como Correr a Aplicação Localmente
@@ -25,8 +25,8 @@ Para executar a aplicação web no seu computador, deverá obter o código fonte
 
 1. **Clonar o repositório da aplicação:**
    ```bash
-   git clone https://github.com/Hmarttinelle/Tese_Final.git
-   cd Tese_Final
+   git clone https://github.com/Hmarttinelle/M.J_Structural_Tools.git
+   cd M.J_Structural_Tools
    ```
 
 2. **Criar e ativar o ambiente virtual (Recomendado):**
